@@ -1,4 +1,5 @@
 from pygame import image as img
+from pygame import Surface
 from os.path import normpath
 import pandas as pd
 # import time
@@ -29,6 +30,6 @@ class ImageManager:
             )
         # print(time.time() - start)
 
-    def get_image(self, image_name: str):
+    def get_image(self, image_name: str) -> Surface:
         """Get the image associated with the given name."""
         return self.images[image_name]

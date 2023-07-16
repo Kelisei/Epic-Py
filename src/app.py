@@ -1,7 +1,6 @@
 import pygame as pg
 import numpy
 from src.image_manager import ImageManager
-from math import ceil
 
 
 class App:
@@ -27,56 +26,62 @@ class App:
                     self.game_screen()
 
     def game_screen(self):
-        left, right = (False, False)
+        def scroll_background(new_scroll:int) -> int:
+            # Function to modify the current background offset
+            if new_scroll > 0:
+                new_scroll = 0
+            elif new_scroll < -(bg_width * (MAX_TILES -1)):
+                new_scroll = -(bg_width * (MAX_TILES -1))
+            return new_scroll
+        # Constant definition
+        SCROLL_SPEED = 10
+        MAX_TILES = 5
+
+        # Variable initialization
+        keys_pressed = {pg.K_LEFT: False, pg.K_RIGHT: False}
         scroll = 0
         bg = self.manager.get_image("bg_01")
-        tiles = ceil(self.size[0] / bg.get_width()) + 4
+        bg_width = bg.get_width()
+
         while not self.flag_exit and self.current_screen == 1:
             self.update()
-            self.draw(bg, scroll, tiles)
+            self.draw(bg, bg_width, scroll, MAX_TILES)
             pg.display.update()
             self.clock.tick(60)
+
             for event in pg.event.get():
                 match event.type:
                     case pg.QUIT:
                         self.flag_exit = True
                     case pg.KEYDOWN:
-                        match event.key:
-                            case pg.K_LEFT:
-                                left = True
-                            case pg.K_RIGHT:
-                                right = True
-                            case pg.K_ESCAPE:
-                                self.current_screen = 0
+                        if event.key in keys_pressed:
+                            keys_pressed[event.key] = True
+                        elif event.key == pg.K_ESCAPE:
+                            self.current_screen = 0
                     case pg.KEYUP:
-                        match event.key:
-                            case pg.K_LEFT:
-                                left = False
-                            case pg.K_RIGHT:
-                                right = False
+                        if event.key in keys_pressed:
+                            keys_pressed[event.key] = False
 
-            if left:
-                scroll += 10
-            elif right:
-                scroll -= 10
-            if scroll > 0:
-                scroll = 0
-            elif scroll < -(bg.get_width() * 4):
-                scroll = -(bg.get_width() * 4)
+            # Actualizar dependiendo de que llave esta presionadas
+            if keys_pressed[pg.K_LEFT]:
+                scroll = scroll_background(scroll + SCROLL_SPEED)
+            elif keys_pressed[pg.K_RIGHT]:
+                scroll = scroll_background(scroll -SCROLL_SPEED)
 
+    
     def update(self):
         """Here we update the game logic, like unit positions"""
         pass
 
-    def draw(self, bg: pg.Surface, scroll: int, tiles: int):
+    def draw(self, bg: pg.Surface, bg_width:int, scroll: int, tiles: int):
         """Here we do the drawing of graphics"""
         for x in range(0, tiles):
-            self.screen.blit(bg, (x * bg.get_width() + scroll, 0))
+            self.screen.blit(bg, (x * bg_width + scroll, 0))
 
     def main_menu(self):
-        self.screen.fill((69, 63, 60))
         text = self.font.render("EPIC PY", True, (255, 255, 255))
-        secondary = self.font.render("PRESS ANY KEY TO GAME", True, (0, 0, 0))
+        secondary = self.font.render("PRESS SPACE TO GAME", True, (0, 0, 0))
+        self.screen.fill((69, 63, 60))
         self.screen.blit(text, (500, 0))
         self.screen.blit(secondary, (150, 600))
         while not self.flag_exit and self.current_screen == 0:
@@ -85,9 +90,8 @@ class App:
                 match event.type:
                     case pg.QUIT:
                         self.flag_exit = True
-                    case pg.KEYDOWN:
-                        if pg.K_SPACE:
-                            self.current_screen = 1
+                    case pg.KEYDOWN if event.key ==  pg.K_SPACE:
+                        self.current_screen = 1
 
     @classmethod
     def start(cls):
