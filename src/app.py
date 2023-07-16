@@ -1,4 +1,5 @@
 import pygame as pg
+import numpy
 from src.image_manager import ImageManager
 
 class App:
@@ -9,6 +10,7 @@ class App:
         pg.display.set_caption("EPIC WAR CLONE")
         self.clock = pg.time.Clock()
         self.manager = ImageManager()
+        self.manager.load_from_memory('image_load')
         self.manager.load_image('bg', 'src/images/test_parallax.png')
         self.run()
 
