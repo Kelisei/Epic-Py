@@ -83,12 +83,6 @@ class App:
         for x in range(0, tiles):
             self.screen.blit(bg, (x * bg_width + scroll, 0))
 
-    def to_screen_size(self, image: pg.Surface) -> pg.Surface:
-        """Adapts images to fit in the screen size"""
-        return pg.transform(
-            image,
-        )
-
     def main_menu(self):
         """The main menu, is loaded at the start o when pressed to go here, should show the game title
         options, and an exit button."""
