@@ -1,7 +1,9 @@
 from pygame import image as img
 from pygame import Surface
+from pygame.transform import scale
 from os.path import normpath
 import pandas as pd
+
 # import time
 
 
@@ -33,3 +35,6 @@ class ImageManager:
     def get_image(self, image_name: str) -> Surface:
         """Get the image associated with the given name."""
         return self.images[image_name]
+
+    def get_image_resized(self, image_name: str, size: tuple[int]) -> Surface:
+        return scale(self.images[image_name], size)

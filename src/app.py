@@ -83,14 +83,19 @@ class App:
         for x in range(0, tiles):
             self.screen.blit(bg, (x * bg_width + scroll, 0))
 
+    def to_screen_size(self, image: pg.Surface) -> pg.Surface:
+        """Adapts images to fit in the screen size"""
+        return pg.transform(
+            image,
+        )
+
     def main_menu(self):
         """The main menu, is loaded at the start o when pressed to go here, should show the game title
         options, and an exit button."""
-        text = self.font.render("EPIC PY", True, (255, 255, 255))
-        secondary = self.font.render("PRESS SPACE TO GAME", True, (0, 0, 0))
-        self.screen.fill((69, 63, 60))
-        self.screen.blit(text, (500, 0))
-        self.screen.blit(secondary, (150, 600))
+        secondary = self.font.render("PRESS SPACE TO GAME", True, (1, 1, 1))
+        bg = self.manager.get_image_resized("mbg_01", self.size)
+        self.screen.blit(bg, (0, 0))
+        self.screen.blit(secondary, (200, 600))
         while not self.flag_exit and self.current_screen == 0:
             pg.display.update()
             for event in pg.event.get():
