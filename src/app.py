@@ -18,6 +18,8 @@ class App:
         self.run()
 
     def run(self):
+        """This method manages the game state is in a constant loop except when the game is closed, checks for what
+        screen is it supossed to be in, and loads it"""
         while not self.flag_exit:
             match self.current_screen:
                 case 0:
@@ -26,13 +28,17 @@ class App:
                     self.game_screen()
 
     def game_screen(self):
-        def scroll_background(new_scroll:int) -> int:
+        """This method is the prototyping scene for where the main game loop will happen, it's supossed
+        to let you move around a level, a let you control units"""
+
+        def scroll_background(new_scroll: int) -> int:
             # Function to modify the current background offset
             if new_scroll > 0:
                 new_scroll = 0
-            elif new_scroll < -(bg_width * (MAX_TILES -1)):
-                new_scroll = -(bg_width * (MAX_TILES -1))
+            elif new_scroll < -(bg_width * (MAX_TILES - 1)):
+                new_scroll = -(bg_width * (MAX_TILES - 1))
             return new_scroll
+
         # Constant definition
         SCROLL_SPEED = 10
         MAX_TILES = 5
@@ -66,19 +72,20 @@ class App:
             if keys_pressed[pg.K_LEFT]:
                 scroll = scroll_background(scroll + SCROLL_SPEED)
             elif keys_pressed[pg.K_RIGHT]:
-                scroll = scroll_background(scroll -SCROLL_SPEED)
+                scroll = scroll_background(scroll - SCROLL_SPEED)
 
-    
     def update(self):
         """Here we update the game logic, like unit positions"""
         pass
 
-    def draw(self, bg: pg.Surface, bg_width:int, scroll: int, tiles: int):
+    def draw(self, bg: pg.Surface, bg_width: int, scroll: int, tiles: int):
         """Here we do the drawing of graphics"""
         for x in range(0, tiles):
             self.screen.blit(bg, (x * bg_width + scroll, 0))
 
     def main_menu(self):
+        """The main menu, is loaded at the start o when pressed to go here, should show the game title
+        options, and an exit button."""
         text = self.font.render("EPIC PY", True, (255, 255, 255))
         secondary = self.font.render("PRESS SPACE TO GAME", True, (0, 0, 0))
         self.screen.fill((69, 63, 60))
@@ -90,9 +97,10 @@ class App:
                 match event.type:
                     case pg.QUIT:
                         self.flag_exit = True
-                    case pg.KEYDOWN if event.key ==  pg.K_SPACE:
+                    case pg.KEYDOWN if event.key == pg.K_SPACE:
                         self.current_screen = 1
 
     @classmethod
     def start(cls):
+        """Creates an instance of this class and starts the application"""
         app = App()
