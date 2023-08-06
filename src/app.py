@@ -1,7 +1,7 @@
 import pygame as pg
 import numpy
 from src.image_manager import ImageManager
-
+from src.button import Button
 
 class App:
     def __init__(self) -> None:
@@ -86,10 +86,12 @@ class App:
     def main_menu(self):
         """The main menu, is loaded at the start o when pressed to go here, should show the game title
         options, and an exit button."""
-        secondary = self.font.render("PRESS SPACE TO GAME", True, (1, 1, 1))
+        start_btn = Button(self.font, text='Start', position=(0, 500))
         bg = self.manager.get_image_resized("mbg_01", self.size)
         self.screen.blit(bg, (0, 0))
-        self.screen.blit(secondary, (200, 600))
+        self.screen.blit(
+            start_btn.surface, start_btn.position
+        )
         while not self.flag_exit and self.current_screen == 0:
             pg.display.update()
             for event in pg.event.get():

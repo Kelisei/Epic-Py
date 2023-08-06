@@ -22,7 +22,7 @@ class ImageManager:
             file_path = normpath(f"src/{file_name}.csv")
             df = pd.read_csv(file_path)
         except FileNotFoundError:
-            print("File not found, loading default.")
+            print("List of images not found.")
         else:
             self.images.update(
                 {
